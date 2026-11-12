@@ -152,16 +152,24 @@ export class NearService {
     modal.show();
   }
 
+  private isConnectingWallet = false;
+
   public async connectWallet(
     walletId?: "my-near-wallet" | "meteor-wallet" | "here-wallet"
   ): Promise<void> {
-    const { selector, modal } = await this.initWalletSelector();
-    if (!walletId) {
-      modal.show();
+    if (this.isConnectingWallet) {
+      console.warn("Wallet connection already in progress");
       return;
     }
+    this.isConnectingWallet = true;
 
     try {
+      const { selector, modal } = await this.initWalletSelector();
+      if (!walletId) {
+        modal.show();
+        return;
+      }
+
       const wallet = await selector.wallet(walletId);
       if (typeof (wallet as any).signIn === "function") {
         await (wallet as any).signIn({
@@ -171,9 +179,11 @@ export class NearService {
       } else {
         modal.show();
       }
-    } catch (err) {
-      console.warn(`Direct sign-in for ${walletId} fell back to modal:`, err);
-      modal.show();
+    } catch (err: any) {
+      console.warn(`Sign-in for ${walletId} error:`, err);
+      throw err;
+    } finally {
+      this.isConnectingWallet = false;
     }
   }
 

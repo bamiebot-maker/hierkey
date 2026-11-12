@@ -60,6 +60,7 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({
   if (!isOpen) return null;
 
   const handleDirectConnect = async (walletId?: NearWalletOption) => {
+    if (loadingWallet) return;
     const key = walletId || "selector";
     setLoadingWallet(key);
     try {
