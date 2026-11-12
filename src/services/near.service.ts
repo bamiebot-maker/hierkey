@@ -43,6 +43,7 @@ export class NearService {
   private wallet: Wallet | null = null;
   private accountId: string | null = null;
   private initPromise: Promise<void> | null = null;
+  private vaultCache = new Map<string, { data: NearVaultView; timestamp: number }>();
 
   constructor() {
     this.contractId =
@@ -257,11 +258,26 @@ export class NearService {
     }
   }
 
-  public async getVault(vaultId: number | string): Promise<NearVaultView | null> {
+  public clearVaultCache() {
+    this.vaultCache.clear();
+  }
+
+  public async getVault(vaultId: number | string, forceRefresh = false): Promise<NearVaultView | null> {
+    const key = String(vaultId);
+    if (!forceRefresh) {
+      const cached = this.vaultCache.get(key);
+      if (cached && Date.now() - cached.timestamp < 15000) {
+        return cached.data;
+      }
+    }
     try {
-      return await this.viewMethod<NearVaultView | null>("get_vault", {
-        vault_id: String(vaultId),
+      const v = await this.viewMethod<NearVaultView | null>("get_vault", {
+        vault_id: key,
       });
+      if (v) {
+        this.vaultCache.set(key, { data: v, timestamp: Date.now() });
+      }
+      return v;
     } catch {
       return null;
     }
@@ -269,9 +285,13 @@ export class NearService {
 
   public async getVaultsByOwner(owner: string): Promise<NearVaultView[]> {
     try {
-      return await this.viewMethod<NearVaultView[]>("get_vaults_by_owner", {
+      const vaults = await this.viewMethod<NearVaultView[]>("get_vaults_by_owner", {
         owner,
       });
+      for (const v of vaults) {
+        this.vaultCache.set(String(v.id), { data: v, timestamp: Date.now() });
+      }
+      return vaults;
     } catch {
       return [];
     }
@@ -279,9 +299,13 @@ export class NearService {
 
   public async getVaultsByBeneficiary(beneficiary: string): Promise<NearVaultView[]> {
     try {
-      return await this.viewMethod<NearVaultView[]>("get_vaults_by_beneficiary", {
+      const vaults = await this.viewMethod<NearVaultView[]>("get_vaults_by_beneficiary", {
         beneficiary,
       });
+      for (const v of vaults) {
+        this.vaultCache.set(String(v.id), { data: v, timestamp: Date.now() });
+      }
+      return vaults;
     } catch {
       return [];
     }
@@ -289,9 +313,13 @@ export class NearService {
 
   public async getVaultsByGuardian(guardian: string): Promise<NearVaultView[]> {
     try {
-      return await this.viewMethod<NearVaultView[]>("get_vaults_by_guardian", {
+      const vaults = await this.viewMethod<NearVaultView[]>("get_vaults_by_guardian", {
         guardian,
       });
+      for (const v of vaults) {
+        this.vaultCache.set(String(v.id), { data: v, timestamp: Date.now() });
+      }
+      return vaults;
     } catch {
       return [];
     }
@@ -349,6 +377,7 @@ export class NearService {
       throw new Error("NEAR wallet not connected. Please connect your wallet first.");
     }
 
+    this.clearVaultCache();
     return await wallet.signAndSendTransaction({
       receiverId: this.contractId,
       actions: [
