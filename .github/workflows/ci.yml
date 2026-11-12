@@ -1,0 +1,47 @@
+name: SpooVault CI/CD
+
+on:
+  push:
+    branches: [main, master, dev]
+  pull_request:
+    branches: [main, master, dev]
+
+jobs:
+  build-and-test:
+    name: Build & Test Validation (Stellar & Web)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Rust Toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+
+      - name: Test Stellar Soroban Contracts
+        run: |
+          cd contracts-stellar
+          cargo test --verbose
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Typecheck TypeScript
+        run: npx tsc --noEmit
+
+      - name: Build Web Application
+        run: npm run build
+
+      - name: Run Unit Tests
+        run: npm test
+
+      - name: Run Smoke Tests
+        run: npm run test:smoke

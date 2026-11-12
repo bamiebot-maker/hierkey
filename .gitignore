@@ -1,0 +1,71 @@
+# Dependencies
+node_modules
+.data/
+/.pnp
+.pnp.js
+
+# Hardhat
+artifacts
+cache
+
+# Testing
+/coverage
+
+# Production
+/dist
+/build
+
+# Misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env
+*.mp4
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+
+# Firebase
+firebase-debug.log
+.firebase
+dev.log
+
+# Hardhat
+artifacts/
+cache/
+
+# Generated gas profiling artifacts
+gas-report.txt
+gas-benchmark.json
+gas-comparison.md
+gas-summary.json
+
+# Rust / Soroban & NEAR
+target/
+contracts-stellar/target/
+contracts-stellar/test_snapshots/
+contracts-near/target/
+
+# Web3 E2E (Synpress / Playwright)
+.cache-synpress/
+e2e/.env.e2e
+playwright-report/
+test-results/
+blob-report/
+.playwright/
+
+# Claude Code
+.claude
+CLAUDE.md

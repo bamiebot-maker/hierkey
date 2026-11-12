@@ -1,0 +1,18 @@
+{
+  "short_name": "Hierkey",
+  "name": "Hierkey - Sovereign Key & Document Custody on NEAR",
+  "icons": [
+    {
+      "src": "/hierkey-logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#0B0F17",
+  "theme_color": "#00EC97",
+  "display": "standalone",
+  "orientation": "portrait"
+}
+

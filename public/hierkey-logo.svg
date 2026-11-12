@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="hierkey-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#0B0F17" />
+      <stop offset="50%" stopColor="#111827" />
+      <stop offset="100%" stopColor="#030712" />
+    </linearGradient>
+    <linearGradient id="hierkey-green" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#00EC97" />
+      <stop offset="100%" stopColor="#00A86B" />
+    </linearGradient>
+    <linearGradient id="hierkey-glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#00EC97" stopOpacity="0.4" />
+      <stop offset="100%" stopColor="#00EC97" stopOpacity="0" />
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Outer Rounded Polygon Shield -->
+  <path
+    d="M 256,36 C 354,36 438,78 456,108 C 456,276 398,398 256,476 C 114,398 56,276 56,108 C 74,78 158,36 256,36 Z"
+    fill="url(#hierkey-bg)"
+    stroke="url(#hierkey-green)"
+    strokeWidth="8"
+  />
+
+  <!-- Subtle glow inner ring -->
+  <path
+    d="M 256,58 C 338,58 412,94 428,122 C 428,260 376,370 256,442 C 136,370 84,260 84,122 C 100,94 174,58 256,58 Z"
+    fill="none"
+    stroke="url(#hierkey-glow)"
+    strokeWidth="12"
+  />
+
+  <!-- Stylized NEAR "N" intersecting with a Sovereign Hierarchical Key -->
+  <!-- Top key ring / Vault Eye -->
+  <circle cx="256" cy="180" r="54" fill="none" stroke="url(#hierkey-green)" strokeWidth="18" filter="url(#glow)" />
+  <circle cx="256" cy="180" r="22" fill="#00EC97" />
+
+  <!-- Key Shaft descending into NEAR angled bar -->
+  <path
+    d="M 256,234 L 256,360"
+    stroke="url(#hierkey-green)"
+    strokeWidth="18"
+    strokeLinecap="round"
+  />
+
+  <!-- Left bit & Right bit (Hierarchical teeth / NEAR angle) -->
+  <path
+    d="M 256,290 L 296,290 L 296,316 L 256,316"
+    fill="url(#hierkey-green)"
+  />
+  <path
+    d="M 256,334 L 310,334 L 310,360 L 256,360"
+    fill="url(#hierkey-green)"
+  />
+  <path
+    d="M 256,334 L 216,334 L 216,356 L 256,356"
+    fill="url(#hierkey-green)"
+  />
+
+  <!-- Dynamic Circuit / Guardian nodes -->
+  <circle cx="170" cy="220" r="10" fill="#00EC97" opacity="0.8" />
+  <line x1="170" y1="220" x2="208" y2="198" stroke="#00EC97" strokeWidth="4" opacity="0.6" strokeDasharray="4 4" />
+
+  <circle cx="342" cy="220" r="10" fill="#00EC97" opacity="0.8" />
+  <line x1="342" y1="220" x2="304" y2="198" stroke="#00EC97" strokeWidth="4" opacity="0.6" strokeDasharray="4 4" />
+
+  <circle cx="256" cy="406" r="12" fill="#00EC97" filter="url(#glow)" />
+</svg>
+

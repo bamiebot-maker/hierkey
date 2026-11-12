@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/hierkey-logo.svg" />
+    <link rel="apple-touch-icon" href="/hierkey-logo.svg" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hierkey | Sovereign Key & Document Custody on NEAR Protocol</title>
+    <meta
+      name="description"
+      content="Hierkey is a decentralized on-chain custody and digital inheritance protocol built on NEAR Protocol. Protect private keys, seed phrases, and confidential records with zero-knowledge client encryption, multi-guardian consensus, and automated dead-man's switch."
+    />
+    <meta name="keywords" content="NEAR, NEAR Protocol, Hierkey, digital inheritance, dead mans switch, multi-sig vault, key custody, smart contract custody, zero knowledge, web3 inheritance, NEAR wallet selector, function call keys" />
+    <meta name="author" content="Hierkey Protocol" />
+    <meta name="theme-color" content="#00EC97" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://hierkey.app/" />
+    <meta property="og:title" content="Hierkey | Sovereign Key & Document Custody on NEAR Protocol" />
+    <meta property="og:description" content="Decentralized key custody and digital inheritance protocol built on NEAR Protocol. Client-side zero-knowledge encryption with multi-guardian consensus and function-call key automation." />
+    <meta property="og:image" content="/hierkey-logo.svg" />
+    <meta property="og:site_name" content="Hierkey" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://hierkey.app/" />
+    <meta name="twitter:title" content="Hierkey | Sovereign Key & Document Custody on NEAR Protocol" />
+    <meta name="twitter:description" content="Decentralized key custody and digital inheritance protocol built on NEAR Protocol. Zero-knowledge client encryption with automated dead-man's switch." />
+    <meta name="twitter:image" content="/hierkey-logo.svg" />
+
+    <!-- Google Site Verification -->
+    <meta
+      name="google-site-verification"
+      content="4YnipV9LgaaNSriG99sCzfYJ8bVt21yVC9Msu6-UATk"
+    />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Hierkey",
+        "url": "https://hierkey.app",
+        "description": "Decentralized on-chain custody and digital inheritance protocol built on NEAR Protocol.",
+        "applicationCategory": "SecurityApplication",
+        "operatingSystem": "All",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "NEAR"
+        }
+      }
+    </script>
+  </head>
+  <body class="dark">
+    <div id="root"></div>
+    <script>
+      window.global = window.global || window;
+      if (typeof window.process === "undefined") {
+        window.process = { env: {} };
+      }
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
