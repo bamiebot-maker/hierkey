@@ -18,6 +18,7 @@ import {
   FiMenu,
   FiX,
   FiLogOut,
+  FiSidebar,
 } from "react-icons/fi";
 import { useWeb3 } from "../context/Web3Context";
 import { contractService } from "../services/contract.service";
@@ -286,16 +287,14 @@ const AppLayout = () => {
                     </p>
                   </div>
                 </Link>
-                <Tooltip content="Collapse sidebar" placement="right" delay={120}>
-                  <button
-                    type="button"
-                    onClick={toggleDesktopSidebar}
-                    className="w-7 h-7 rounded-lg border border-gray-800 bg-gray-900/60 hover:bg-gray-800 hover:border-gray-700 hover:text-white flex items-center justify-center text-gray-400 transition-colors"
-                    aria-label="Collapse sidebar"
-                  >
-                    <FiChevronLeft className="text-[15px]" />
-                  </button>
-                </Tooltip>
+                <button
+                  type="button"
+                  onClick={toggleDesktopSidebar}
+                  className="w-7 h-7 rounded-lg border border-gray-800 bg-gray-900/60 hover:bg-gray-800 hover:border-gray-700 hover:text-white flex items-center justify-center text-gray-400 transition-colors"
+                  aria-label="Collapse sidebar"
+                >
+                  <FiSidebar className="text-[14px]" />
+                </button>
               </div>
 
               {/* Row 1: Network Status Badge & Approval Queue */}
@@ -422,62 +421,47 @@ const AppLayout = () => {
           /* Collapsed Icon-Only Rail */
           <div className="w-[4.25rem] px-2 py-3 flex flex-col items-center justify-between h-full flex-shrink-0">
             <div className="w-full flex flex-col items-center">
-              {/* Expand Toggle Button at Top */}
-              <Tooltip content="Expand sidebar" placement="right" delay={120}>
-                <button
-                  type="button"
-                  onClick={toggleDesktopSidebar}
-                  className="w-8 h-8 mb-2.5 rounded-xl border border-gray-800 bg-gray-900/80 hover:bg-gray-800 hover:border-gray-700 hover:text-white flex items-center justify-center text-gray-400 transition-colors"
-                  aria-label="Expand sidebar"
-                >
-                  <FiChevronRight className="text-[15px]" />
-                </button>
-              </Tooltip>
-
-              {/* Logo */}
-              <Tooltip content="Hierkey Dashboard" placement="right" delay={150}>
-                <Link to="/dashboard" className="mb-2 group">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 border border-gray-700/70 flex items-center justify-center shadow-lg shadow-black/50 group-hover:border-[#00EC97]/60 transition-colors">
-                    <BrandLogo className="w-6 h-6" />
-                  </div>
-                </Link>
-              </Tooltip>
-
-              {/* Status / Bell */}
-              <Tooltip
-                content={
-                  pendingApprovalCount > 0
-                    ? `Approval Queue: ${pendingApprovalCount} pending`
-                    : !isConnected
-                    ? "NEAR Wallet Disconnected"
-                    : "NEAR Testnet"
-                }
-                placement="right"
-                delay={150}
+              {/* Expand Toggle Button at Top (FiSidebar icon) */}
+              <button
+                type="button"
+                onClick={toggleDesktopSidebar}
+                className="w-8 h-8 mb-2.5 rounded-xl border border-gray-800 bg-gray-900/80 hover:bg-gray-800 hover:border-gray-700 hover:text-white flex items-center justify-center text-gray-400 transition-colors"
+                aria-label="Expand sidebar"
               >
-                <button
-                  type="button"
-                  onClick={openApprovalQueue}
-                  className="mb-2.5 w-10 h-[34px] rounded-xl border border-white/[0.08] bg-white/[0.04] flex items-center justify-center text-[#00EC97] transition-colors hover:border-[#00EC97]/50"
-                >
-                  {pendingApprovalCount > 0 ? (
-                    <div className="relative">
-                      <FiBell className="text-brand-300 text-[14px]" />
-                      <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-brand-500 animate-pulse" />
-                    </div>
-                  ) : (
-                    <span
-                      className={`w-2 h-2 rounded-full ${
-                        !isConnected
-                          ? "bg-gray-500"
-                          : "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"
-                      }`}
-                    />
-                  )}
-                </button>
-              </Tooltip>
+                <FiSidebar className="text-[15px]" />
+              </button>
 
-              {/* Nav Icons with Tooltips */}
+              {/* Logo (No popup tooltip) */}
+              <Link to="/dashboard" className="mb-2 group" aria-label="Hierkey Dashboard">
+                <div className="w-10 h-10 rounded-xl bg-white/5 border border-gray-700/70 flex items-center justify-center shadow-lg shadow-black/50 group-hover:border-[#00EC97]/60 transition-colors">
+                  <BrandLogo className="w-6 h-6" />
+                </div>
+              </Link>
+
+              {/* Status Dot (No popup tooltip) */}
+              <button
+                type="button"
+                onClick={openApprovalQueue}
+                className="mb-2.5 w-10 h-[34px] rounded-xl border border-white/[0.08] bg-white/[0.04] flex items-center justify-center text-[#00EC97] transition-colors hover:border-[#00EC97]/50"
+                aria-label="Approval queue and network status"
+              >
+                {pendingApprovalCount > 0 ? (
+                  <div className="relative">
+                    <FiBell className="text-brand-300 text-[14px]" />
+                    <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-brand-500 animate-pulse" />
+                  </div>
+                ) : (
+                  <span
+                    className={`w-2 h-2 rounded-full ${
+                      !isConnected
+                        ? "bg-gray-500"
+                        : "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"
+                    }`}
+                  />
+                )}
+              </button>
+
+              {/* Nav Icons with subtle styled dark tooltips */}
               <nav className="w-full space-y-1">
                 {navItems.map((item) => {
                   const Icon = item.icon;
@@ -487,7 +471,13 @@ const AppLayout = () => {
                       key={`rail-tooltip-${item.path}`}
                       content={item.label}
                       placement="right"
-                      delay={120}
+                      offset={14}
+                      delay={350}
+                      classNames={{
+                        base: "pointer-events-none",
+                        content:
+                          "bg-gray-900 border border-gray-700/80 text-gray-200 text-xs px-2.5 py-1 rounded-lg shadow-2xl font-medium",
+                      }}
                     >
                       <Link
                         key={`rail-${item.path}`}
@@ -506,36 +496,29 @@ const AppLayout = () => {
               </nav>
             </div>
 
-            {/* Bottom Actions: Create Vault & Profile Avatar */}
+            {/* Bottom Actions: Create Vault & Profile Avatar (No popup tooltip) */}
             <div className="w-full space-y-1.5 border-t border-gray-800/70 pt-2 flex flex-col items-center">
-              <Tooltip content="Create access vault" placement="right" delay={120}>
-                <Button
-                  isIconOnly
-                  onPress={handleCreateVault}
-                  isDisabled={!canCreateVault}
-                  className={`mx-auto w-10 h-9 min-w-10 rounded-xl border ${
-                    canCreateVault
-                      ? "border-[#00EC97]/40 bg-[#00EC97]/15 text-[#00EC97] hover:bg-emerald-700/30 shadow-[0_4px_14px_-6px_rgba(0,236,151,0.6)]"
-                      : "border-gray-800/80 bg-gray-900/55 text-gray-600"
-                  }`}
-                  aria-label="Create access vault"
-                >
-                  <FiPlus className="text-[16px]" />
-                </Button>
-              </Tooltip>
-
-              <Tooltip
-                content={isConnected ? displayName : "Connect Wallet"}
-                placement="right"
-                delay={120}
+              <Button
+                isIconOnly
+                onPress={handleCreateVault}
+                isDisabled={!canCreateVault}
+                className={`mx-auto w-10 h-9 min-w-10 rounded-xl border ${
+                  canCreateVault
+                    ? "border-[#00EC97]/40 bg-[#00EC97]/15 text-[#00EC97] hover:bg-emerald-700/30 shadow-[0_4px_14px_-6px_rgba(0,236,151,0.6)]"
+                    : "border-gray-800/80 bg-gray-900/55 text-gray-600"
+                }`}
+                aria-label="Create access vault"
               >
-                <Link
-                  to="/profile"
-                  className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-white text-xs font-bold border border-[#00EC97]/40 shadow-md"
-                >
-                  {account ? account.substring(0, 2).toUpperCase() : <FiUser className="text-[15px]" />}
-                </Link>
-              </Tooltip>
+                <FiPlus className="text-[16px]" />
+              </Button>
+
+              <Link
+                to="/profile"
+                className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-white text-xs font-bold border border-[#00EC97]/40 shadow-md"
+                aria-label="User Profile"
+              >
+                {account ? account.substring(0, 2).toUpperCase() : <FiUser className="text-[15px]" />}
+              </Link>
             </div>
           </div>
         )}
