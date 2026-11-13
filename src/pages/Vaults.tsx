@@ -463,18 +463,20 @@ const Vaults = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Your Access Vaults</h1>
-          <p className="text-gray-400">
+          <h1 className="text-2xl sm:text-3xl font-bold mb-1.5 tracking-tight">Your Access Vaults</h1>
+          <p className="text-xs sm:text-sm text-gray-400">
             Set up guardian-controlled vaults for living access, emergencies, and inheritance delivery.
           </p>
         </div>
-        <Button
-          className={`${buttonClasses.primaryMd} group`}
-          startContent={<FiPlus className="group-hover:rotate-90 transition-transform" />}
-          onPress={onOpen}
-        >
-          Create Access Vault
-        </Button>
+        {(filteredVaults.length > 0 || search || filter !== "all") && (
+          <Button
+            className={`${buttonClasses.primaryMd} group`}
+            startContent={<FiPlus className="group-hover:rotate-90 transition-transform" />}
+            onPress={onOpen}
+          >
+            Create Access Vault
+          </Button>
+        )}
       </div>
 
       <div className="flex flex-col sm:flex-row gap-4">
@@ -534,20 +536,32 @@ const Vaults = () => {
         </div>
       ) : filteredVaults.length === 0 ? (
         <div className="text-center py-12">
-          <div className="w-20 h-20 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <FiShield className="text-gray-600 text-3xl" />
+          <div className="w-16 h-16 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-5 border border-gray-800/80 shadow-lg">
+            <FiShield className="text-gray-500 text-2xl" />
           </div>
-          <h3 className="text-xl font-bold mb-2">No access vaults found</h3>
-          <p className="text-gray-400 mb-6">
-            {search ? "Try a different search term" : "Create your first access vault to get started"}
+          <h3 className="text-lg sm:text-xl font-bold mb-1.5 text-white">No access vaults found</h3>
+          <p className="text-xs sm:text-sm text-gray-400 mb-6 max-w-sm mx-auto">
+            {search ? `No access vaults match "${search}". Try clearing your filters.` : "Create your first access vault to get started with sovereign custody."}
           </p>
-          <Button
-            className={buttonClasses.primaryMd}
-            onPress={onOpen}
-            startContent={<FiPlus />}
-          >
-            Create Your First Access Vault
-          </Button>
+          {search || filter !== "all" ? (
+            <Button
+              className={buttonClasses.neutralMd}
+              onPress={() => {
+                setSearch("");
+                setFilter("all");
+              }}
+            >
+              Reset Filters
+            </Button>
+          ) : (
+            <Button
+              className={buttonClasses.primaryMd}
+              onPress={onOpen}
+              startContent={<FiPlus />}
+            >
+              Create Your First Access Vault
+            </Button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

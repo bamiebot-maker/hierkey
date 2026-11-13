@@ -266,29 +266,44 @@ const AppLayout = () => {
       <OfflineBanner />
       <aside
         className={`hidden lg:flex fixed left-0 top-0 h-screen border-r border-gray-800/80 bg-gray-950/95 backdrop-blur-2xl z-50 shadow-[18px_0_40px_-34px_rgba(0,0,0,0.95)] transition-[width] duration-300 overflow-visible ${
-          desktopSidebarExpanded ? "w-[20rem]" : "w-[4.5rem]"
+          desktopSidebarExpanded ? "w-[19rem]" : "w-[4.25rem]"
         }`}
       >
         {/* Left Icon Rail */}
-        <div className="w-[4.5rem] border-r border-gray-800/80 px-2 py-4 flex flex-col items-center justify-between h-full flex-shrink-0">
+        <div className="w-[4.25rem] border-r border-gray-800/80 px-2 py-3 flex flex-col items-center justify-between h-full flex-shrink-0">
           <div className="w-full flex flex-col items-center">
-            {/* Traffic Dots */}
-            <div className="flex items-center gap-1.5 pb-3">
-              <span className="h-2.5 w-2.5 rounded-full bg-[#ff5f57]/90" />
-              <span className="h-2.5 w-2.5 rounded-full bg-[#febc2e]/90" />
-              <span className="h-2.5 w-2.5 rounded-full bg-[#28c840]/90" />
+            {/* Top Bar: Traffic Dots or Expand Button */}
+            <div className="flex items-center justify-center h-6 mb-2.5">
+              {!desktopSidebarExpanded ? (
+                <Tooltip content="Expand sidebar" placement="right" delay={120}>
+                  <button
+                    type="button"
+                    onClick={toggleDesktopSidebar}
+                    className="w-7 h-6 rounded-md hover:bg-gray-800/80 border border-gray-800/80 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+                    aria-label="Expand sidebar"
+                  >
+                    <FiChevronRight className="text-[13px]" />
+                  </button>
+                </Tooltip>
+              ) : (
+                <div className="flex items-center gap-1.5">
+                  <span className="h-2 w-2 rounded-full bg-[#ff5f57]/90" />
+                  <span className="h-2 w-2 rounded-full bg-[#febc2e]/90" />
+                  <span className="h-2 w-2 rounded-full bg-[#28c840]/90" />
+                </div>
+              )}
             </div>
 
-            {/* Row 0: Logo (Height matches Header card: 48px) */}
+            {/* Row 0: Logo (Height matches Header card: 40px) */}
             <Tooltip content="Open dashboard" placement="right" delay={150}>
               <Link to="/dashboard" className="mb-2 group">
-                <div className="w-11 h-12 rounded-xl bg-white/5 border border-gray-700/70 flex items-center justify-center shadow-lg shadow-black/50 group-hover:border-[#00EC97]/60 transition-colors">
-                  <BrandLogo className="w-7 h-7" />
+                <div className="w-10 h-10 rounded-xl bg-white/5 border border-gray-700/70 flex items-center justify-center shadow-lg shadow-black/50 group-hover:border-[#00EC97]/60 transition-colors">
+                  <BrandLogo className="w-6 h-6" />
                 </div>
               </Link>
             </Tooltip>
 
-            {/* Row 1: Status & Queue Icon (Height matches Status chip: 38px) */}
+            {/* Row 1: Status & Queue Icon (Height matches Status chip: 34px) */}
             <Tooltip
               content={
                 pendingApprovalCount > 0
@@ -303,12 +318,12 @@ const AppLayout = () => {
               <button
                 type="button"
                 onClick={openApprovalQueue}
-                className="mb-3 w-11 h-[38px] rounded-xl border border-white/[0.08] bg-white/[0.04] flex items-center justify-center text-[#00EC97] transition-colors hover:border-[#00EC97]/50"
+                className="mb-2 w-10 h-[34px] rounded-xl border border-white/[0.08] bg-white/[0.04] flex items-center justify-center text-[#00EC97] transition-colors hover:border-[#00EC97]/50"
               >
                 {pendingApprovalCount > 0 ? (
                   <div className="relative">
-                    <FiBell className="text-brand-300 text-[15px]" />
-                    <span className="absolute -top-1.5 -right-1.5 w-2 h-2 rounded-full bg-brand-500 animate-pulse" />
+                    <FiBell className="text-brand-300 text-[14px]" />
+                    <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-brand-500 animate-pulse" />
                   </div>
                 ) : (
                   <span
@@ -322,8 +337,8 @@ const AppLayout = () => {
               </button>
             </Tooltip>
 
-            {/* Rows 2-9: Navigation Icons (Aligned pixel-for-pixel with right panel items) */}
-            <nav className="w-full space-y-1.5">
+            {/* Rows 2-9: Navigation Icons (Aligned pixel-for-pixel with right panel items: h-9, space-y-1) */}
+            <nav className="w-full space-y-1">
               {navItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.path);
@@ -337,13 +352,13 @@ const AppLayout = () => {
                     <Link
                       key={`rail-${item.path}`}
                       to={item.path}
-                      className={`mx-auto flex h-11 w-11 items-center justify-center rounded-xl border transition-all ${
+                      className={`mx-auto flex h-9 w-10 items-center justify-center rounded-xl border transition-all ${
                         active
-                          ? "bg-[#00EC97]/15 border-[#00EC97]/50 text-[#00EC97] shadow-[0_4px_16px_-6px_rgba(0,236,151,0.4)]"
+                          ? "bg-[#00EC97]/15 border-[#00EC97]/50 text-[#00EC97] shadow-[0_2px_10px_-4px_rgba(0,236,151,0.5)]"
                           : "border-transparent text-gray-500 hover:text-gray-200 hover:border-gray-700/70 hover:bg-gray-900/80"
                       }`}
                     >
-                      <Icon className="text-[17px]" />
+                      <Icon className="text-[16px]" />
                     </Link>
                   </Tooltip>
                 );
@@ -352,20 +367,20 @@ const AppLayout = () => {
           </div>
 
           {/* Bottom Actions: Create Vault & Profile Avatar */}
-          <div className="w-full space-y-2 border-t border-gray-800/70 pt-2 flex flex-col items-center">
+          <div className="w-full space-y-1.5 border-t border-gray-800/70 pt-2 flex flex-col items-center">
             <Tooltip content="Create access vault" placement="right" delay={120}>
               <Button
                 isIconOnly
                 onPress={handleCreateVault}
                 isDisabled={!canCreateVault}
-                className={`mx-auto w-11 h-11 min-w-11 rounded-xl border ${
+                className={`mx-auto w-10 h-9 min-w-10 rounded-xl border ${
                   canCreateVault
                     ? "border-[#00EC97]/40 bg-[#00EC97]/15 text-[#00EC97] hover:bg-emerald-700/30 shadow-[0_4px_14px_-6px_rgba(0,236,151,0.6)]"
                     : "border-gray-800/80 bg-gray-900/55 text-gray-600"
                 }`}
                 aria-label="Create access vault"
               >
-                <FiPlus className="text-[17px]" />
+                <FiPlus className="text-[16px]" />
               </Button>
             </Tooltip>
 
@@ -376,9 +391,9 @@ const AppLayout = () => {
             >
               <Link
                 to="/profile"
-                className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white text-xs font-bold border border-[#00EC97]/40 shadow-md"
+                className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center text-white text-xs font-bold border border-[#00EC97]/40 shadow-md"
               >
-                {account ? account.substring(0, 2).toUpperCase() : <FiUser className="text-[16px]" />}
+                {account ? account.substring(0, 2).toUpperCase() : <FiUser className="text-[15px]" />}
               </Link>
             </Tooltip>
           </div>
@@ -386,29 +401,36 @@ const AppLayout = () => {
 
         {/* Right Expanded Panel (aligned row-for-row with the Left Rail) */}
         {desktopSidebarExpanded && (
-          <div className="flex-1 min-w-0 p-3 flex flex-col justify-between h-full">
+          <div className="flex-1 min-w-0 px-2.5 py-3 flex flex-col justify-between h-full">
             <div>
-              {/* Row 0: App Title Header & Collapse Button (Height: 48px) */}
-              <div className="h-12 mb-2 flex items-center gap-2">
-                <div className="flex-1 min-w-0 h-12 rounded-xl border border-gray-800/80 bg-gray-900/60 px-3 flex flex-col justify-center">
-                  <p className="text-sm font-bold truncate text-white">Hierkey</p>
-                  <p className="text-[11px] text-emerald-400 font-medium truncate">
-                    NEAR Protocol Custody
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={toggleDesktopSidebar}
-                  className="h-12 w-10 flex-shrink-0 inline-flex items-center justify-center rounded-xl border border-gray-700/80 bg-gray-900/85 text-gray-300 hover:border-gray-500 hover:text-white transition-colors"
-                  aria-label="Collapse sidebar"
-                >
-                  <FiChevronLeft className="text-[16px]" />
-                </button>
+              {/* Top Bar: Navigation Label & Modern Collapsible Button (Height: 24px matches traffic dots) */}
+              <div className="flex items-center justify-between h-6 mb-2.5 px-1">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-gray-500 font-semibold">
+                  Navigation
+                </span>
+                <Tooltip content="Collapse sidebar" placement="right" delay={120}>
+                  <button
+                    type="button"
+                    onClick={toggleDesktopSidebar}
+                    className="w-6 h-6 rounded-md hover:bg-gray-800/80 border border-transparent hover:border-gray-700/80 flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+                    aria-label="Collapse sidebar"
+                  >
+                    <FiChevronLeft className="text-[14px]" />
+                  </button>
+                </Tooltip>
               </div>
 
-              {/* Row 1: Network Badge & Approval Queue (Height: 38px) */}
-              <div className="h-[38px] mb-3 flex items-center gap-2">
-                <div className="flex-1 min-w-0 h-full rounded-xl border border-white/[0.08] bg-white/[0.04] px-2.5 flex items-center gap-2">
+              {/* Row 0: App Title Header (Height: 40px matches Logo) */}
+              <div className="h-10 mb-2 rounded-xl border border-gray-800/80 bg-gray-900/60 px-2.5 flex flex-col justify-center">
+                <p className="text-[13px] font-bold truncate text-white leading-tight">Hierkey</p>
+                <p className="text-[10px] text-emerald-400 font-medium truncate">
+                  NEAR Protocol Custody
+                </p>
+              </div>
+
+              {/* Row 1: Network Badge & Approval Queue (Height: 34px matches Status chip) */}
+              <div className="h-[34px] mb-2 flex items-center gap-1.5">
+                <div className="flex-1 min-w-0 h-full rounded-xl border border-white/[0.08] bg-white/[0.04] px-2 flex items-center gap-1.5">
                   <span
                     className={`w-2 h-2 rounded-full flex-shrink-0 ${
                       !isConnected
@@ -416,26 +438,26 @@ const AppLayout = () => {
                         : "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"
                     }`}
                   />
-                  <p className="text-[11px] font-semibold truncate text-slate-100">
-                    {!isConnected ? "NEAR Wallet Disconnected" : "NEAR Testnet"}
+                  <p className="text-[10px] font-semibold truncate text-slate-100">
+                    {!isConnected ? "NEAR Disconnected" : "NEAR Testnet"}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={openApprovalQueue}
-                  className={`h-full px-2.5 rounded-xl border flex items-center gap-1.5 transition-colors text-xs font-medium flex-shrink-0 ${
+                  className={`h-full px-2 rounded-xl border flex items-center gap-1 transition-colors text-[11px] font-medium flex-shrink-0 ${
                     pendingApprovalCount > 0
                       ? "border-[#00EC97]/40 bg-[#00EC97]/15 text-slate-100"
                       : "border-gray-800/80 bg-gray-900/65 text-gray-400 hover:bg-gray-900/85"
                   }`}
                 >
-                  <FiBell className="text-[13px]" />
+                  <FiBell className="text-[12px]" />
                   <span>{pendingApprovalCount}</span>
                 </button>
               </div>
 
-              {/* Rows 2-9: Navigation Links (Height: 44px each, space-y-1.5, matching left rail) */}
-              <nav className="space-y-1.5">
+              {/* Rows 2-9: Navigation Links (Height: 36px each, space-y-1, matching left rail) */}
+              <nav className="space-y-1">
                 {navItems.map((item) => {
                   const Icon = item.icon;
                   const active = isActive(item.path);
@@ -443,18 +465,18 @@ const AppLayout = () => {
                     <Link
                       key={`panel-${item.path}`}
                       to={item.path}
-                      className={`h-11 flex items-center gap-3 rounded-xl border px-3 transition-all ${
+                      className={`h-9 flex items-center gap-2.5 rounded-xl border px-2.5 transition-all ${
                         active
                           ? "border-[#00EC97]/50 bg-gradient-to-r from-[#00EC97]/20 to-emerald-900/20 text-white font-semibold shadow-[0_2px_10px_-4px_rgba(0,236,151,0.5)]"
                           : "border-transparent text-gray-400 hover:text-gray-100 hover:border-gray-800/80 hover:bg-gray-900/70"
                       }`}
                     >
                       <Icon
-                        className={`text-base ${
+                        className={`text-[15px] ${
                           active ? "text-[#00EC97]" : "text-gray-500"
                         }`}
                       />
-                      <span className="text-sm font-medium">{item.label}</span>
+                      <span className="text-[12.5px] font-medium">{item.label}</span>
                     </Link>
                   );
                 })}
@@ -462,31 +484,31 @@ const AppLayout = () => {
             </div>
 
             {/* Bottom Actions: Create Vault & User Profile Card */}
-            <div className="pt-2 border-t border-gray-800/70 space-y-2">
+            <div className="pt-2 border-t border-gray-800/70 space-y-1.5">
               <Button
                 onPress={handleCreateVault}
                 isDisabled={!canCreateVault}
                 className={
                   canCreateVault
-                    ? `w-full h-11 ${buttonClasses.primarySm} shadow-md`
-                    : "w-full h-11 rounded-xl border border-gray-800/80 bg-gray-900/70 text-gray-500 text-xs font-medium"
+                    ? `w-full h-9 rounded-xl bg-[#00EC97] hover:bg-[#00d688] text-gray-950 font-bold text-xs shadow-md`
+                    : "w-full h-9 rounded-xl border border-gray-800/80 bg-gray-900/70 text-gray-500 text-xs font-medium"
                 }
-                startContent={<FiPlus className="text-base" />}
+                startContent={<FiPlus className="text-sm" />}
               >
                 Create Access Vault
               </Button>
 
               {isConnected ? (
-                <div className="flex items-center gap-2.5 rounded-xl border border-gray-800/80 bg-gray-900/70 p-2">
+                <div className="flex items-center gap-2 rounded-xl border border-gray-800/80 bg-gray-900/70 p-1.5">
                   <Avatar
-                    className="bg-white/10 flex-shrink-0 text-xs font-bold"
+                    className="bg-white/10 flex-shrink-0 text-[10px] font-bold w-7 h-7"
                     name={nickname || account?.substring(2, 6)}
                   />
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold truncate text-gray-200">
+                    <p className="text-[11px] font-semibold truncate text-gray-200">
                       {displayName}
                     </p>
-                    <p className="text-[10px] text-gray-500 font-mono truncate">
+                    <p className="text-[9px] text-gray-500 font-mono truncate">
                       {shortenAddress(account || "", 4)}
                     </p>
                   </div>
@@ -495,7 +517,7 @@ const AppLayout = () => {
                       isIconOnly
                       variant="light"
                       size="sm"
-                      className="text-gray-400 hover:text-white"
+                      className="text-gray-400 hover:text-white h-7 w-7 min-w-7"
                       onPress={() => {
                         setDesktopMenuOpen((open) => !open);
                       }}
@@ -533,9 +555,9 @@ const AppLayout = () => {
             type="button"
             onClick={toggleDesktopSidebar}
             aria-label="Expand sidebar"
-            className="group absolute -right-5 top-1/2 -translate-y-1/2 h-10 w-10 rounded-xl border border-gray-700/80 bg-gray-900/95 text-gray-300 shadow-[0_18px_30px_-20px_rgba(0,0,0,0.95)] hover:border-gray-500 hover:text-white transition-all"
+            className="group absolute -right-3.5 top-20 h-8 w-7 rounded-r-xl border border-l-0 border-gray-700/80 bg-gray-900/95 text-gray-300 shadow-[0_10px_20px_-10px_rgba(0,0,0,0.95)] hover:border-gray-500 hover:text-white transition-all flex items-center justify-center"
           >
-            <FiChevronRight className="mx-auto text-[16px]" />
+            <FiChevronRight className="text-[14px]" />
           </button>
         )}
       </aside>
@@ -762,7 +784,7 @@ const AppLayout = () => {
 
       <main
         className={`min-h-screen pt-20 pb-8 lg:pt-0 lg:pb-0 transition-[margin] duration-300 ${
-          desktopSidebarExpanded ? "lg:ml-[20rem]" : "lg:ml-[4.5rem]"
+          desktopSidebarExpanded ? "lg:ml-[19rem]" : "lg:ml-[4.25rem]"
         }`}
       >
         <div className="p-4 lg:p-8">

@@ -108,6 +108,13 @@ html,
   max-width: 100vw;
   overflow-x: hidden;
   position: relative;
+  font-size: 14px;
+}
+
+@media (min-width: 1536px) {
+  html {
+    font-size: 15px;
+  }
 }
 
 h1,
