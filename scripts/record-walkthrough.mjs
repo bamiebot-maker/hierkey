@@ -38,7 +38,7 @@ async function run() {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  console.log("Launching Chromium for 1080p fully-functional demo recording...");
+  console.log("Launching Chromium for 1080p demo recording (Christopher voice)...");
   const browser = await chromium.launch({
     executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     headless: true,
@@ -69,49 +69,49 @@ async function run() {
   const page = await context.newPage();
 
   // ==========================================
-  // SCENE 1: Introduction (Landing Page) ~16s
+  // SCENE 1: Introduction (Landing Page) ~18s
   // ==========================================
-  console.log("Scene 1: Landing Page (0:00 - 0:16)...");
+  console.log("Scene 1: Landing Page (0:00 - 0:18)...");
   await page.goto("http://localhost:3000/", { waitUntil: "domcontentloaded" });
   await sleep(1500);
 
   // Smooth scroll through hero and architecture pillars
-  await smoothScroll(page, 700, 2000);
-  await sleep(1200);
-  await smoothScroll(page, 1400, 2000);
-  await sleep(1200);
-  await smoothScroll(page, 0, 1500);
-  await sleep(800);
+  await smoothScroll(page, 750, 2200);
+  await sleep(1500);
+  await smoothScroll(page, 1500, 2200);
+  await sleep(1500);
+  await smoothScroll(page, 0, 1600);
+  await sleep(1000);
 
   // ==========================================
-  // SCENE 2: Dashboard Overview & Sidebar ~16s
+  // SCENE 2: Dashboard Overview & Sidebar ~18.5s
   // ==========================================
-  console.log("Scene 2: Dashboard Overview & Sidebar (0:16 - 0:32)...");
+  console.log("Scene 2: Dashboard Overview & Sidebar (0:18 - 0:36.5)...");
   await page.goto("http://localhost:3000/dashboard", { waitUntil: "domcontentloaded" });
-  await sleep(1500);
+  await sleep(1600);
 
   // Toggle sidebar collapse to show sleek icon rail
   const sidebarToggle = page.locator('aside button[aria-label="Collapse sidebar"], aside button[aria-label="Expand sidebar"]').first();
   if (await sidebarToggle.isVisible()) {
     await sidebarToggle.click();
-    await sleep(1400);
+    await sleep(1600);
     // Expand back
     await sidebarToggle.click();
-    await sleep(1400);
+    await sleep(1600);
   }
 
   // Scroll through telemetry & keeper bot relays
-  await smoothScroll(page, 450, 1800);
-  await sleep(1500);
-  await smoothScroll(page, 850, 1800);
-  await sleep(1500);
-  await smoothScroll(page, 0, 1200);
-  await sleep(800);
+  await smoothScroll(page, 450, 2000);
+  await sleep(1600);
+  await smoothScroll(page, 850, 2000);
+  await sleep(1600);
+  await smoothScroll(page, 0, 1400);
+  await sleep(1000);
 
   // ==========================================
-  // SCENE 3: Live Access Vault Creation & Heartbeat ~18s
+  // SCENE 3: Live Access Vault Creation & Heartbeat ~17.5s
   // ==========================================
-  console.log("Scene 3: Live Access Vault Creation & Heartbeat (0:32 - 0:50)...");
+  console.log("Scene 3: Live Access Vault Creation & Heartbeat (0:36.5 - 0:54)...");
   await page.goto("http://localhost:3000/vaults", { waitUntil: "domcontentloaded" });
   await sleep(1500);
 
@@ -143,7 +143,7 @@ async function run() {
   const submitVaultBtn = page.locator('footer button:has-text("Create Access Vault")');
   await submitVaultBtn.click();
 
-  // Watch optimistic vault card appear and hold so viewer sees it live!
+  // Watch optimistic vault card appear and hold
   await sleep(3500);
 
   // Test Prove Life heartbeat live on the new vault card!
@@ -157,9 +157,9 @@ async function run() {
   }
 
   // ==========================================
-  // SCENE 4: Encrypted Document Custody & Pinata IPFS ~18s
+  // SCENE 4: Encrypted Document Custody & Pinata IPFS ~17s
   // ==========================================
-  console.log("Scene 4: Encrypted Document Custody & Pinata IPFS (0:50 - 0:68)...");
+  console.log("Scene 4: Encrypted Document Custody & Pinata IPFS (0:54 - 0:71)...");
   await page.goto("http://localhost:3000/documents", { waitUntil: "domcontentloaded" });
   await sleep(1500);
 
@@ -208,15 +208,15 @@ async function run() {
   await sleep(4500);
 
   // ==========================================
-  // SCENE 5: Architecture, Security & Conclusion ~14s
+  // SCENE 5: Architecture, Security & Conclusion ~18s
   // ==========================================
-  console.log("Scene 5: Architecture, Security & Conclusion (0:68 - 0:82)...");
+  console.log("Scene 5: Architecture, Security & Conclusion (0:71 - 0:89)...");
   await page.goto("http://localhost:3000/docs", { waitUntil: "domcontentloaded" });
-  await sleep(1500);
-  await smoothScroll(page, 600, 2000);
-  await sleep(1500);
-  await smoothScroll(page, 1200, 2000);
-  await sleep(2500);
+  await sleep(1600);
+  await smoothScroll(page, 600, 2200);
+  await sleep(1600);
+  await smoothScroll(page, 1200, 2200);
+  await sleep(3000);
 
   console.log("Recording completed successfully! Flushing video to disk...");
   await page.close();

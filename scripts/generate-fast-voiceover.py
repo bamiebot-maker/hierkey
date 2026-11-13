@@ -2,8 +2,8 @@ import asyncio
 import os
 import edge_tts
 
-VOICE = "en-NG-AbeoNeural"
-RATE = "+10%"
+VOICE = "en-US-ChristopherNeural"
+RATE = "+5%"
 
 SCENES = [
     {

@@ -1,47 +1,43 @@
 1
-00:00:00,500 --> 00:00:05,200
+00:00:00,500 --> 00:00:05,800
 Every year, billions in crypto assets and private keys are lost forever when holders become incapacitated.
 
 2
-00:00:05,200 --> 00:00:09,800
+00:00:05,800 --> 00:00:10,500
 Traditional solutions require centralized trust and vulnerable intermediaries.
 
 3
-00:00:09,800 --> 00:00:16,000
+00:00:10,500 --> 00:00:18,000
 Welcome to Hierkey: the sovereign dead man's switch and confidential document custody protocol built on NEAR Protocol.
 
 4
-00:00:16,500 --> 00:00:23,500
+00:00:18,500 --> 00:00:26,000
 On the Hierkey dashboard, track on-chain heartbeat timers, guardian approvals, and cryptographic custody in real time.
 
 5
-00:00:23,500 --> 00:00:32,500
+00:00:26,000 --> 00:00:36,550
 Powered by NEAR Function-Call Access Keys, decentralized keeper bots monitor heartbeat expirations and execute authorized inheritance triggers without ever accessing user funds.
 
 6
-00:00:32,500 --> 00:00:39,000
+00:00:37,000 --> 00:00:44,500
 Creating an Access Vault takes seconds: name your vault, designate trusted guardians, and configure a Shamir multi-signature threshold.
 
 7
-00:00:39,000 --> 00:00:46,000
+00:00:44,500 --> 00:00:53,490
 One click invokes the NEAR smart contract, establishing your sovereign vault on-chain.
 
 8
-00:00:46,000 --> 00:00:50,000
-Watch as we record a live Proof of Life heartbeat transaction, instantly resetting the countdown timer on NEAR Testnet.
-
-9
-00:00:50,000 --> 00:00:58,000
+00:00:54,000 --> 00:01:02,500
 In the Documents center, sensitive recovery phrases and legal documents are encrypted client-side using ECIES before being pinned to IPFS via Pinata.
 
-10
-00:00:58,000 --> 00:01:08,000
+9
+00:01:02,500 --> 00:01:10,320
 Only cryptographic commitments live on NEAR, ensuring zero-knowledge privacy, verifiable ownership, and tamper-proof custody.
 
-11
-00:01:08,000 --> 00:01:16,000
-Every file is secured under strict guardian access policies with automated cryptographic release conditions.
+10
+00:01:11,000 --> 00:01:18,000
+Maintaining custody is as effortless as a single heartbeat. With one click, broadcast a Proof of Life transaction to reset the countdown timer for sub-cent gas.
 
-12
-00:01:16,000 --> 00:01:23,550
+11
+00:01:18,000 --> 00:01:28,420
 Hierkey is live on NEAR Testnet at hierkey.web.app. Protect your digital legacy today.

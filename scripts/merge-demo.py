@@ -26,10 +26,10 @@ def main():
     # Precise scene audio start timestamps in seconds matching voiceover & browser actions
     scenes = [
         {"file": "recordings/audio/scene1_intro.mp3", "start": 0.5},
-        {"file": "recordings/audio/scene2_dashboard.mp3", "start": 16.5},
-        {"file": "recordings/audio/scene3_vaults.mp3", "start": 32.5},
-        {"file": "recordings/audio/scene4_documents.mp3", "start": 50.0},
-        {"file": "recordings/audio/scene5_heartbeat_conclusion.mp3", "start": 68.0},
+        {"file": "recordings/audio/scene2_dashboard.mp3", "start": 18.5},
+        {"file": "recordings/audio/scene3_vaults.mp3", "start": 37.0},
+        {"file": "recordings/audio/scene4_documents.mp3", "start": 54.0},
+        {"file": "recordings/audio/scene5_heartbeat_conclusion.mp3", "start": 71.0},
     ]
 
     last_scene = scenes[-1]
