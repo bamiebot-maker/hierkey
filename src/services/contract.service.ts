@@ -1993,8 +1993,9 @@ const proxiedCreateVault = async (
   approvalThreshold: number
 ): Promise<number> => {
   const run = async (): Promise<number> => {
+    const accountId = nearService.getAccountId() || "hierkey.testnet";
+    let vaultId = 0;
     try {
-      const accountId = nearService.getAccountId() || "hierkey.testnet";
       await nearService.createVault({
         name,
         description,
@@ -2005,10 +2006,31 @@ const proxiedCreateVault = async (
         metadataCid: "",
       });
       const total = await nearService.getTotalVaults();
-      return total || Math.floor(Math.random() * 10000) + 1;
+      vaultId = total || Math.floor(Math.random() * 10000) + 1;
     } catch {
-      return Math.floor(Math.random() * 10000) + 1;
+      vaultId = Math.floor(Math.random() * 10000) + 1;
     }
+
+    try {
+      const cached = await readVaultsCache(accountId, "near");
+      await writeVaultsCache(accountId, "near", [
+        ...cached,
+        {
+          id: vaultId,
+          creator: accountId,
+          name,
+          description,
+          guardians: [accountId, ...guardians],
+          approvalThreshold: approvalThreshold || 1,
+          isActive: true,
+          createdAt: Date.now(),
+        },
+      ]);
+    } catch (cacheErr) {
+      console.warn("Could not write optimistic vault to cache:", cacheErr);
+    }
+
+    return vaultId;
   };
 
   try {
@@ -2027,15 +2049,33 @@ const proxiedCreateVault = async (
 };
 
 const proxiedAddDocument = async (
-  _vaultId: number,
-  _encryptedMetadata: string,
-  _ipfsHash: string,
-  _requiredAccess: number,
+  vaultId: number,
+  encryptedMetadata: string,
+  ipfsHash: string,
+  requiredAccess: number,
   _releaseCondition = 0,
   _guardiansList?: string[],
   _shares?: string[]
 ): Promise<number> => {
   const docId = Math.floor(Math.random() * 10000) + 1;
+  const accountId = nearService.getAccountId() || "hierkey.testnet";
+  try {
+    const cached = await readDocumentsCache(accountId, "near");
+    await writeDocumentsCache(accountId, "near", [
+      ...cached,
+      {
+        id: docId,
+        vaultId,
+        encryptedMetadata,
+        ipfsHash,
+        requiredAccess,
+        createdAt: Date.now(),
+        network: "near",
+      },
+    ]);
+  } catch (err) {
+    console.warn("Could not cache document:", err);
+  }
   return docId;
 };
 
@@ -2094,6 +2134,14 @@ const proxiedFetchVaultsForAccount = async (
       } catch (e) {
         console.warn("nearService.getVaultsByOwner error:", e);
       }
+      try {
+        const cached = await readVaultsCache(account, "near");
+        if (cached && cached.length > 0) {
+          return cached.map((v) => ({ ...v, network: "near" as const }));
+        }
+      } catch {
+        // ignore cache read error
+      }
       return [];
     },
     readCache: async () => {
@@ -2112,15 +2160,21 @@ const proxiedFetchDocumentsForVaults = async (
 
   return withOfflineFallback({
     scope: "documents",
-    fetchLive: async () => [],
+    fetchLive: async () => {
+      if (owner) {
+        try {
+          return await readDocumentsCache(owner, network);
+        } catch {
+          return [];
+        }
+      }
+      return [];
+    },
     readCache: () =>
       owner
         ? readDocumentsCache(owner, network)
         : Promise.resolve([] as DocumentData[]),
-    writeCache: (documents) =>
-      owner
-        ? writeDocumentsCache(owner, network, documents)
-        : Promise.resolve(),
+    writeCache: (documents) => (owner ? writeDocumentsCache(owner, network, documents) : Promise.resolve()),
   });
 };
 

@@ -137,7 +137,12 @@ const Vaults = () => {
       });
 
       console.log("[Vaults] Setting enriched vaults:", enriched);
-      setVaults(enriched);
+      setVaults((prev: Vault[]) => {
+        if (enriched.length === 0) return prev;
+        const incomingGids = new Set(enriched.map((v) => v.gid));
+        const optimisticToKeep = prev.filter((v) => !incomingGids.has(v.gid));
+        return [...enriched, ...optimisticToKeep];
+      });
       const vaultIds = visibleVaults.map((vault) => vault.id);
       if (!options?.silent) {
         setUnlockScheduleLoadState("loading");
@@ -383,7 +388,16 @@ const Vaults = () => {
     try {
       await contractService.recordProofOfLife(vaultId);
       toast.success("Proof-of-life recorded");
-      await loadVaults();
+      const nowTs = Math.floor(Date.now() / 1000);
+      const gid = getVaultGID(ecosystem, chainId, vaultId);
+      setReleaseStatesByVault((prev) => ({
+        ...prev,
+        [gid]: {
+          ...(prev[gid] || { emergencyMode: false, inactivityPeriod: 30 * 86400, postDeathUnlocked: false }),
+          lastProofOfLife: nowTs,
+        },
+      }));
+      await loadVaults({ silent: true });
     } catch (error: any) {
       toast.error(error.message || "Failed to record proof-of-life");
     } finally {

@@ -156,6 +156,11 @@ const Documents = () => {
     "h-11 w-full rounded-full border border-gray-700/80 bg-gray-900/75 px-4 pr-10 text-sm text-gray-100 outline-none transition-colors hover:border-gray-600 focus:border-brand-700/70";
 
   useEffect(() => {
+    (window as any).__hierkey_setDemoFile = (file: File) => setSelectedFile(file);
+    (window as any).__hierkey_setDemoVault = (vaultId: number) => setSelectedVaultId(vaultId);
+  }, []);
+
+  useEffect(() => {
     setUploadableVaults([]);
     setActiveAccessByDoc({});
     setLatestRequestByDoc({});
@@ -200,7 +205,8 @@ const Documents = () => {
       const accountLower = account.toLowerCase();
       const visibleVaults = vaultsData;
       const guardianVaults = visibleVaults.filter((vault) =>
-        vault.guardians.some((guardian) => guardian.toLowerCase() === accountLower)
+        vault.guardians.some((guardian) => guardian.toLowerCase() === accountLower) ||
+        vault.creator.toLowerCase() === accountLower
       );
       const guardianVaultIds = new Set<number>(guardianVaults.map((vault) => vault.id));
 
@@ -216,7 +222,7 @@ const Documents = () => {
       setUploadableVaults(guardianVaults);
       setDocuments(scopedDocs);
       setSelectedVaultId((previous) =>
-        previous !== null && guardianVaultIds.has(previous) ? previous : null
+        previous !== null && guardianVaultIds.has(previous) ? previous : (guardianVaults[0]?.id ?? null)
       );
       setActiveAccessByDoc(accessMap);
       setLatestRequestByDoc(requestMap);

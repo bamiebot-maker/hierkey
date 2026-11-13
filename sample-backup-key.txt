@@ -1,0 +1,10 @@
+Hierkey Sovereign Vault Backup
+====================================
+Asset: Sovereign Master Seed Phrase
+Chain: NEAR Protocol Mainnet & Testnet
+Shamir Policy: 2-of-3 Guardians Required
+Encryption: ECIES Curve25519 + AES-256-GCM
+Decentralized Storage: IPFS via Pinata Cluster
+
+Phrase:
+abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about
