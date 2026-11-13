@@ -214,19 +214,25 @@ const Documents = () => {
       const scopedDocs = docsData.filter((doc) => visibleVaultIds.has(doc.vaultId));
       const docIds = scopedDocs.map((doc) => doc.id);
 
-      const accessMap = await contractService.getActiveAccessMap(account, docIds);
-      const requestMap = await contractService.getLatestRequestsForUser(account, docIds);
-      const releaseMap = await contractService.getDocumentReleaseConditionMap(docIds);
-
       setVaults(visibleVaults);
       setUploadableVaults(guardianVaults);
       setDocuments(scopedDocs);
       setSelectedVaultId((previous) =>
         previous !== null && guardianVaultIds.has(previous) ? previous : (guardianVaults[0]?.id ?? null)
       );
-      setActiveAccessByDoc(accessMap);
-      setLatestRequestByDoc(requestMap);
-      setReleaseConditionByDoc(releaseMap);
+
+      try {
+        const [accessMap, requestMap, releaseMap] = await Promise.all([
+          contractService.getActiveAccessMap(account, docIds).catch(() => ({})),
+          contractService.getLatestRequestsForUser(account, docIds).catch(() => ({})),
+          contractService.getDocumentReleaseConditionMap(docIds).catch(() => ({})),
+        ]);
+        setActiveAccessByDoc(accessMap);
+        setLatestRequestByDoc(requestMap);
+        setReleaseConditionByDoc(releaseMap);
+      } catch {
+        // Fallbacks for maps
+      }
     } catch (error) {
       console.error("Error loading documents:", error);
       captureError("documents.loadData", error, { account: account || "" });

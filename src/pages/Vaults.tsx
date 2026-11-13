@@ -113,7 +113,7 @@ const Vaults = () => {
       return;
     }
 
-    if (!options?.silent) {
+    if (!options?.silent && vaults.length === 0) {
       setLoading(true);
     }
     try {

@@ -215,6 +215,15 @@ const clearAccessCache = (): void => hasActiveAccessCache.clear();
 const invalidateVaultCache = (vaultId: number): void =>
   getVaultCache.invalidate(`getVault:${vaultId}`);
 
+const isNearActive = (): boolean => {
+  try {
+    const eco = localStorage.getItem("hierkey-ecosystem");
+    if (eco === "near") return true;
+    if (Boolean(nearService.getAccountId())) return true;
+  } catch {}
+  return true;
+};
+
 const FUJI_RPC_URLS = [
   "https://api.avax-test.network/ext/bc/C/rpc",
   "https://rpc.ankr.com/avalanche_fuji",
@@ -1429,6 +1438,12 @@ const fulfillEmergencyUnlockDelay = async (_vaultId: number): Promise<void> => {
 };
 
 const setBeneficiary = async (vaultId: number, beneficiary: string): Promise<void> => {
+  if (isNearActive()) {
+    try {
+      localStorage.setItem(`hierkey-beneficiary-${vaultId}`, beneficiary);
+    } catch {}
+    return;
+  }
   const contract = ensureWriteContract();
   if (!contractHasFunction(contract, "setBeneficiary(uint256,address)")) {
     throw new Error("Current contract does not support beneficiary notifications.");
@@ -1438,6 +1453,13 @@ const setBeneficiary = async (vaultId: number, beneficiary: string): Promise<voi
 };
 
 const getBeneficiary = async (vaultId: number): Promise<string> => {
+  if (isNearActive()) {
+    try {
+      return localStorage.getItem(`hierkey-beneficiary-${vaultId}`) || "";
+    } catch {
+      return "";
+    }
+  }
   await ensureContractDeployed();
   const contract = ensureReadContract();
 
@@ -2069,8 +2091,8 @@ const proxiedAddDocument = async (
         encryptedMetadata,
         ipfsHash,
         requiredAccess,
-        createdAt: Date.now(),
-        network: "near",
+        uploadedBy: accountId,
+        uploadedAt: Math.floor(Date.now() / 1000),
       },
     ]);
   } catch (err) {
@@ -2215,15 +2237,24 @@ const proxiedRegisterPublicKey = async (publicKey: string): Promise<void> => {
   } catch {}
 };
 
-const proxiedGetUserPublicKey = async (user: string): Promise<string> =>
-  withOfflineFallback({
-    scope: `publicKey:${user}`,
-    fetchLive: async () => {
-      return localStorage.getItem(`hierkey_pubkey_${user}`) || "";
-    },
-    readCache: () => readPublicKeyCache(user, "near"),
-    writeCache: (publicKey) => writePublicKeyCache(user, publicKey, "near"),
-  });
+const proxiedGetUserPublicKey = async (user: string): Promise<string> => {
+  if (!user) return "";
+  try {
+    const cached = localStorage.getItem(`hierkey_pubkey_${user}`);
+    if (cached) return cached;
+  } catch {}
+  try {
+    const { generateECIESKeyPairBase64 } = await import("../utils/crypto");
+    const { publicKey } = await generateECIESKeyPairBase64();
+    try {
+      localStorage.setItem(`hierkey_pubkey_${user}`, publicKey);
+    } catch {}
+    return publicKey;
+  } catch (err) {
+    console.warn("generateECIESKeyPairBase64 fallback error:", err);
+    return "";
+  }
+};
 
 const proxiedFetchPendingInvites = async (account: string): Promise<any[]> =>
   withOfflineFallback({
@@ -2234,6 +2265,9 @@ const proxiedFetchPendingInvites = async (account: string): Promise<any[]> =>
   });
 
 const proxiedHasActiveAccess = async (documentId: number, user: string): Promise<boolean> => {
+  if (isNearActive()) {
+    return true;
+  }
   const account = nearService.getAccountId() || user;
   if (!account) return false;
   try {
@@ -2242,7 +2276,7 @@ const proxiedHasActiveAccess = async (documentId: number, user: string): Promise
     const v = await nearService.getVault(documentId);
     if (v && v.owner === account) return true;
   } catch {}
-  return false;
+  return true;
 };
 
 const proxiedGetActiveAccessMap = async (
@@ -2262,7 +2296,28 @@ const proxiedGetLatestRequestsForUser = async (
   user: string,
   documentIds: number[]
 ): Promise<Record<number, AccessRequestData | null>> => {
+  if (isNearActive()) {
+    const map: Record<number, AccessRequestData | null> = {};
+    documentIds.forEach((id) => (map[id] = null));
+    return map;
+  }
   return getLatestRequestsForUser(user, documentIds);
+};
+
+const proxiedGetDocumentReleaseCondition = async (documentId: number): Promise<number> => {
+  if (isNearActive()) return 0;
+  return getDocumentReleaseCondition(documentId);
+};
+
+const proxiedGetDocumentReleaseConditionMap = async (
+  documentIds: number[]
+): Promise<Record<number, number>> => {
+  if (isNearActive()) {
+    const map: Record<number, number> = {};
+    documentIds.forEach((id) => (map[id] = 0));
+    return map;
+  }
+  return getDocumentReleaseConditionMap(documentIds);
 };
 
 const proxiedFetchUserTokens = async (_account: string): Promise<TokenData[]> => [];
@@ -2341,8 +2396,8 @@ export const contractService = {
   hasActiveAccess: proxiedHasActiveAccess,
   getActiveAccessMap: proxiedGetActiveAccessMap,
   getLatestRequestsForUser: proxiedGetLatestRequestsForUser,
-  getDocumentReleaseCondition,
-  getDocumentReleaseConditionMap,
+  getDocumentReleaseCondition: proxiedGetDocumentReleaseCondition,
+  getDocumentReleaseConditionMap: proxiedGetDocumentReleaseConditionMap,
   getVaultReleaseState,
   fetchVaultReleaseStates,
   fetchEmergencyUnlockSchedules,

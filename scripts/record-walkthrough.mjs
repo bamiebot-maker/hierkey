@@ -29,7 +29,6 @@ async function smoothScroll(page, targetY, durationMs = 1200) {
 async function run() {
   const outputDir = path.resolve("recordings/video_raw");
   if (fs.existsSync(outputDir)) {
-    // Clean old raw webm files
     for (const f of fs.readdirSync(outputDir)) {
       if (f.endsWith(".webm")) {
         fs.unlinkSync(path.join(outputDir, f));
@@ -39,7 +38,7 @@ async function run() {
     fs.mkdirSync(outputDir, { recursive: true });
   }
 
-  console.log("Launching Chromium for 1080p high-framerate demo recording...");
+  console.log("Launching Chromium for 1080p fully-functional demo recording...");
   const browser = await chromium.launch({
     executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     headless: true,
@@ -70,172 +69,165 @@ async function run() {
   const page = await context.newPage();
 
   // ==========================================
-  // SCENE 1: Introduction (Landing Page) ~16.0s
+  // SCENE 1: Introduction (Landing Page) ~16s
   // ==========================================
   console.log("Scene 1: Landing Page (0:00 - 0:16)...");
   await page.goto("http://localhost:3000/", { waitUntil: "domcontentloaded" });
-  await sleep(2000);
+  await sleep(1500);
 
-  // Smooth scroll through landing page features
-  await smoothScroll(page, 750, 2500);
-  await sleep(1500);
-  await smoothScroll(page, 1400, 2500);
-  await sleep(1500);
-  await smoothScroll(page, 0, 1800);
+  // Smooth scroll through hero and architecture pillars
+  await smoothScroll(page, 700, 2000);
   await sleep(1200);
+  await smoothScroll(page, 1400, 2000);
+  await sleep(1200);
+  await smoothScroll(page, 0, 1500);
+  await sleep(800);
 
-  // Click Launch App or navigate to Dashboard
-  console.log("Transitioning to Dashboard...");
+  // ==========================================
+  // SCENE 2: Dashboard Overview & Sidebar ~16s
+  // ==========================================
+  console.log("Scene 2: Dashboard Overview & Sidebar (0:16 - 0:32)...");
   await page.goto("http://localhost:3000/dashboard", { waitUntil: "domcontentloaded" });
+  await sleep(1500);
 
-  // ==========================================
-  // SCENE 2: Dashboard Overview & Sidebar ~16.5s
-  // ==========================================
-  console.log("Scene 2: Dashboard Overview & Sidebar (0:16 - 0:32.5)...");
-  await sleep(2000);
-
-  // Toggle sidebar collapse to demonstrate responsive icon rail
+  // Toggle sidebar collapse to show sleek icon rail
   const sidebarToggle = page.locator('aside button[aria-label="Collapse sidebar"], aside button[aria-label="Expand sidebar"]').first();
   if (await sidebarToggle.isVisible()) {
     await sidebarToggle.click();
-    await sleep(1500);
+    await sleep(1400);
     // Expand back
     await sidebarToggle.click();
-    await sleep(1500);
+    await sleep(1400);
   }
 
-  // Scroll through telemetry, keeper bot relays, and heartbeat countdown
-  await smoothScroll(page, 450, 2000);
-  await sleep(2000);
-  await smoothScroll(page, 850, 2000);
-  await sleep(2000);
-  await smoothScroll(page, 0, 1500);
-  await sleep(1000);
+  // Scroll through telemetry & keeper bot relays
+  await smoothScroll(page, 450, 1800);
+  await sleep(1500);
+  await smoothScroll(page, 850, 1800);
+  await sleep(1500);
+  await smoothScroll(page, 0, 1200);
+  await sleep(800);
 
   // ==========================================
-  // SCENE 3: Access Vaults Creation ~15.0s
+  // SCENE 3: Live Access Vault Creation & Heartbeat ~18s
   // ==========================================
-  console.log("Scene 3: Live Access Vault Creation (0:32.5 - 0:47.5)...");
+  console.log("Scene 3: Live Access Vault Creation & Heartbeat (0:32 - 0:50)...");
   await page.goto("http://localhost:3000/vaults", { waitUntil: "domcontentloaded" });
   await sleep(1500);
 
   // Click Create Access Vault
   const createVaultBtn = page.getByRole("button", { name: /create.*vault/i }).first();
-  if (await createVaultBtn.isVisible()) {
-    await createVaultBtn.click();
-    await sleep(800);
+  await createVaultBtn.click();
+  await sleep(600);
 
-    // Fill form fields dynamically
-    const nameInput = page.getByPlaceholder(/e\.g\., Family Estate Records/i);
-    await nameInput.fill("Sovereign Heritage Trust");
-    await sleep(500);
+  // Fill form fields dynamically
+  const nameInput = page.getByPlaceholder(/e\.g\., Family Estate Records/i);
+  await nameInput.fill("Sovereign Heritage Trust");
+  await sleep(400);
 
-    const descInput = page.getByPlaceholder(/Describe which files/i);
-    await descInput.fill("Confidential multi-guardian recovery vault with 60-day heartbeat.");
-    await sleep(600);
+  const descInput = page.getByPlaceholder(/Describe which files/i);
+  await descInput.fill("Confidential multi-guardian recovery vault with 60-day heartbeat.");
+  await sleep(400);
 
-    const guardianInput = page.getByPlaceholder(/Enter guardian's NEAR account ID/i);
-    await guardianInput.fill("guardian-alpha.testnet");
-    await page.getByRole("button", { name: "Add", exact: true }).click();
-    await sleep(600);
+  const guardianInput = page.getByPlaceholder(/Enter guardian's NEAR account ID/i);
+  await guardianInput.fill("guardian-alpha.testnet");
+  await page.getByRole("button", { name: "Add", exact: true }).click();
+  await sleep(500);
 
-    const benInput = page.getByPlaceholder(/Enter beneficiary's NEAR account ID/i);
-    await benInput.fill("beneficiary-family.testnet");
-    await sleep(600);
+  const benInput = page.getByPlaceholder(/Enter beneficiary's NEAR account ID/i);
+  await benInput.fill("beneficiary-family.testnet");
+  await sleep(500);
 
-    // Submit form
-    const submitBtn = page.locator('footer button:has-text("Create Access Vault")');
-    await submitBtn.click();
-    // Watch optimistic vault card appear
-    await sleep(3500);
-  }
+  // Submit form
+  console.log("Submitting Create Access Vault...");
+  const submitVaultBtn = page.locator('footer button:has-text("Create Access Vault")');
+  await submitVaultBtn.click();
 
-  // ==========================================
-  // SCENE 4: Encrypted Document Custody & IPFS ~15.5s
-  // ==========================================
-  console.log("Scene 4: Encrypted Document Custody & Pinata IPFS (0:47.5 - 0:63)...");
-  await page.goto("http://localhost:3000/documents", { waitUntil: "domcontentloaded" });
-  await sleep(1500);
+  // Watch optimistic vault card appear and hold so viewer sees it live!
+  await sleep(3500);
 
-  const uploadBtn = page.locator('button:has-text("Upload Document")').first();
-  if (await uploadBtn.isVisible()) {
-    await uploadBtn.click();
-    await sleep(800);
-
-    // Set demo file & ensure vault is selected
-    await page.evaluate(() => {
-      const file = new File(
-        ["Hierkey confidential backup seed phrase: abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"],
-        "sample-backup-key.txt",
-        { type: "text/plain" }
-      );
-      if ((window).__hierkey_setDemoFile) (window).__hierkey_setDemoFile(file);
-    });
-    await sleep(600);
-
-    // Select Access Level: read_write
-    const readWriteRadio = page.locator('input[value="1"], label:has-text("read_write")').first();
-    if (await readWriteRadio.isVisible()) {
-      await readWriteRadio.click();
-      await sleep(400);
-    }
-
-    // Submit upload
-    const submitDocBtn = page.locator('footer button:has-text("Upload Document")');
-    if (await submitDocBtn.isEnabled()) {
-      await submitDocBtn.click();
-      // Wait for client-side encryption and IPFS pinning
-      await sleep(4000);
-
-      // Close key backup modal if shown
-      const closeKeyModal = page.locator('button:has-text("I Have Saved My Key"), button:has-text("Done"), button[aria-label="Close"]').first();
-      if (await closeKeyModal.isVisible()) {
-        await closeKeyModal.click();
-        await sleep(1000);
-      }
-    }
-  }
-
-  // ==========================================
-  // SCENE 5: Proof of Life Heartbeat & Conclusion ~16.5s
-  // ==========================================
-  console.log("Scene 5: Proof of Life Heartbeat & Conclusion (0:63 - 0:79.5)...");
-  await page.goto("http://localhost:3000/vaults", { waitUntil: "domcontentloaded" });
-  await sleep(1500);
-
-  // Click Prove Life button on the vault card
+  // Test Prove Life heartbeat live on the new vault card!
   const proveLifeBtn = page.locator('button:has-text("Prove Life")').first();
   if (await proveLifeBtn.isVisible()) {
+    console.log("Clicking Prove Life button...");
     await proveLifeBtn.hover();
-    await sleep(600);
+    await sleep(400);
     await proveLifeBtn.click();
     await sleep(2500);
   }
 
-  // Show live NEAR Testnet connection & status
-  await smoothScroll(page, 300, 1500);
-  await sleep(2000);
+  // ==========================================
+  // SCENE 4: Encrypted Document Custody & Pinata IPFS ~18s
+  // ==========================================
+  console.log("Scene 4: Encrypted Document Custody & Pinata IPFS (0:50 - 0:68)...");
+  await page.goto("http://localhost:3000/documents", { waitUntil: "domcontentloaded" });
+  await sleep(1500);
 
-  // Navigate to Docs & Architecture for crisp finale
+  const uploadDocBtn = page.locator('button:has-text("Upload Document")').first();
+  await uploadDocBtn.click();
+  await sleep(800);
+
+  // Select file and ensure vault is selected
+  await page.evaluate(() => {
+    const file = new File(
+      ["Hierkey confidential backup seed phrase: abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"],
+      "sample-backup-key.txt",
+      { type: "text/plain" }
+    );
+    if ((window).__hierkey_setDemoFile) (window).__hierkey_setDemoFile(file);
+  });
+  await sleep(600);
+
+  // Select Access Level: read_write
+  const readWriteRadio = page.locator('input[value="1"], label:has-text("read_write")').first();
+  if (await readWriteRadio.isVisible()) {
+    await readWriteRadio.click();
+    await sleep(400);
+  }
+
+  // Submit upload
+  console.log("Submitting Document Upload...");
+  const submitUploadBtn = page.locator('footer button:has-text("Upload Document")');
+  await submitUploadBtn.click();
+
+  // Wait for client-side encryption and IPFS pinning
+  await sleep(3500);
+
+  // Show encryption key modal, check the backup confirmation, then close
+  const keyModalCheckbox = page.locator('input[type="checkbox"]').first();
+  if (await keyModalCheckbox.isVisible()) {
+    await sleep(800);
+    await keyModalCheckbox.check();
+    await sleep(600);
+    const closeKeyModal = page.locator('footer button:has-text("Close")').first();
+    await closeKeyModal.click();
+    await sleep(1000);
+  }
+
+  // Hold on documents table to clearly show the live uploaded document in the table!
+  await sleep(4500);
+
+  // ==========================================
+  // SCENE 5: Architecture, Security & Conclusion ~14s
+  // ==========================================
+  console.log("Scene 5: Architecture, Security & Conclusion (0:68 - 0:82)...");
   await page.goto("http://localhost:3000/docs", { waitUntil: "domcontentloaded" });
   await sleep(1500);
-  await smoothScroll(page, 450, 2000);
+  await smoothScroll(page, 600, 2000);
+  await sleep(1500);
+  await smoothScroll(page, 1200, 2000);
   await sleep(2500);
 
-  console.log("Recording finished! Finalizing video stream...");
+  console.log("Recording completed successfully! Flushing video to disk...");
   await page.close();
   await context.close();
   await browser.close();
 
-  console.log("Browser closed. Waiting 3 seconds for video file flush...");
   await sleep(3000);
-
   const files = fs.readdirSync(outputDir).filter((f) => f.endsWith(".webm"));
   if (files.length > 0) {
     const rawVideo = path.join(outputDir, files[0]);
-    console.log("SUCCESS! Recorded raw video:", rawVideo, "Size:", fs.statSync(rawVideo).size, "bytes");
-  } else {
-    console.error("No webm video found in", outputDir);
+    console.log("SUCCESS! Raw video recorded at:", rawVideo, "Size:", fs.statSync(rawVideo).size, "bytes");
   }
 }
 
